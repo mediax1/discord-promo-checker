@@ -32,7 +32,7 @@ pip install requests colorama
 
 ### Clone the Repository:
 ```bash
-git clone https://github.com/yourusername/discord-promo-checker.git
+git clone https://github.com/mediax1/discord-promo-checker.git
 cd discord-promo-checker
 ```
 
@@ -73,7 +73,7 @@ This tool is intended for educational purposes only. Use it responsibly and ensu
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## Contributing
 
