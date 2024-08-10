@@ -1,0 +1,5 @@
+{
+    "promos_file": "promos.txt",
+    "proxies_file": "proxies.txt",
+    "num_threads": 5
+}
