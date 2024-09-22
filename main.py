@@ -66,7 +66,15 @@ def load_promos(filename):
         logging.error(f"The file '{filename}' was not found.")
         return None
 
-def write_to_file(filename, message):
+def write_to_file(filename, message, plain_text=False):
+    """
+    Writes a message to a file. If plain_text is True, color codes are stripped for file output.
+    """
+    if plain_text:
+        message = message.replace(Fore.GREEN, "").replace(Fore.RED, "").replace(Fore.LIGHTBLUE_EX, "")
+        message = message.replace(Fore.YELLOW, "").replace(Style.RESET_ALL, "").replace(Style.BRIGHT, "")
+        message = message.replace(Fore.CYAN, "").replace(Fore.MAGENTA, "").replace(Fore.LIGHTCYAN_EX, "")
+    
     with open(filename, "a") as f:
         f.write(message + "\n")
 
@@ -101,22 +109,21 @@ def check_promo(promo, proxies, summary):
             if uses == 0 and not redeemed:
                 message = f"{Fore.GREEN}Unclaimed Promo: {Fore.LIGHTBLUE_EX}https://promos.discord.gg/{promo}{Style.RESET_ALL}"
                 print(message)
-                write_to_file("output/unclaimed_promos.txt", message)
-                summary['unclaimed'] += 1
+                write_to_file("output/unclaimed_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
             elif uses >= 1 and max_uses == 1:
                 message = f"{Fore.RED}Claimed Promo: {Fore.LIGHTBLUE_EX}https://promos.discord.gg/{promo}{Style.RESET_ALL}"
                 print(message)
-                write_to_file("output/claimed_promos.txt", message)
-                summary['claimed'] += 1
+                write_to_file("output/claimed_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
             else:
                 message = f"{Fore.YELLOW}Promo status unclear for: {Fore.LIGHTBLUE_EX}https://promos.discord.gg/{promo}{Style.RESET_ALL}"
                 print(message)
-                write_to_file("output/error_checking_promos.txt", message)
+                write_to_file("output/error_checking_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
+
 
         elif response.status_code == 404:
             message = f"{Fore.RED}Invalid Promo: {Fore.LIGHTBLUE_EX}https://promos.discord.gg/{promo}{Style.RESET_ALL}"
             print(message)
-            write_to_file("output/invalid_promos.txt", message)
+            write_to_file("output/invalid_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
             summary['invalid'] += 1
         elif response.status_code == 429:
             logging.warning(f"Rate limit exceeded for promo: {promo}. Retrying after delay.")
@@ -126,11 +133,13 @@ def check_promo(promo, proxies, summary):
         else:
             message = f"{Fore.RED}Error checking promo: {promo} (Status Code: {response.status_code}){Style.RESET_ALL}"
             print(message)
-            write_to_file("output/error_checking_promos.txt", message)
+            write_to_file("output/error_checking_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
+
     except requests.exceptions.RequestException as e:
         message = f"{Fore.RED}An error occurred while checking promo {promo}: {e}{Style.RESET_ALL}"
         print(message)
-        write_to_file("output/error_checking_promos.txt", message)
+        write_to_file("output/error_checking_promos.txt", f"https://promos.discord.gg/{promo}", plain_text=True)
+
 
 def main():
     print(Style.BRIGHT + Fore.MAGENTA + ASCII_ART + Style.RESET_ALL)
